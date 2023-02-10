@@ -2,6 +2,7 @@ package me.pele.cooktime.services;
 
 import me.pele.cooktime.model.Ingredient;
 
+import java.util.Map;
 import java.util.Optional;
 
 public interface IngredientService {
@@ -10,4 +11,9 @@ public interface IngredientService {
 
     Optional<Ingredient> getById(Long id);
 
+    Ingredient editIngredient(Long id, Ingredient ingredient);
+
+    Ingredient deleteIngredient(Long id);
+
+    Map<Long, Ingredient> getAll();
 }

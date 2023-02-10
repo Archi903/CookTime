@@ -3,8 +3,6 @@ package me.pele.cooktime.controlers;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.time.LocalDate;
-
 @RestController
 public class FirstController {
 

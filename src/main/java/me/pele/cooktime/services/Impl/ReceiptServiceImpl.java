@@ -32,4 +32,22 @@ public class ReceiptServiceImpl implements ReceiptService {
     public Optional<Receipt> getById(Long id) {
         return Optional.ofNullable(receiptMap.get(id));
     }
+
+    @Override
+    public Receipt editReceipt(Long id, Receipt receipt){
+        if (!validationService.validate(receipt)) {
+            throw new ValidationException(receipt.toString());
+        }
+        return receiptMap.replace(id, receipt);
+    }
+
+    @Override
+    public Receipt deleteReceipt(Long id){
+        return receiptMap.remove(id);
+    }
+    @Override
+    public Map <Long, Receipt> getAll(){
+        return receiptMap;
+    }
+
 }

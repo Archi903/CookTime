@@ -1,32 +1,45 @@
 package me.pele.cooktime.services.Impl;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import me.pele.cooktime.exception.ValidationException;
 import me.pele.cooktime.model.Ingredient;
+import me.pele.cooktime.services.FilesService;
 import me.pele.cooktime.services.IngredientService;
 import me.pele.cooktime.services.ValidationService;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.PostConstruct;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
+import java.util.TreeMap;
 
 @Service
 public class IngredientServiceImpl implements IngredientService {
 
-    private final Map<Long, Ingredient> ingredientMap = new HashMap<>();
+    final private FilesService filesService;
+    private Map<Long, Ingredient> ingredientMap = new HashMap<>();
     private static long idCount = 1;
     private final ValidationService validationService;
 
-    public IngredientServiceImpl(ValidationService validationService) {
+    public IngredientServiceImpl(FilesService filesService, ValidationService validationService) {
+        this.filesService = filesService;
         this.validationService = validationService;
     }
 
+    @PostConstruct
+    private void init(){
+        readFromFile();
+    }
 
     @Override
     public Ingredient save(Ingredient ingredient) {
         if (!validationService.validate(ingredient)) {
             throw new ValidationException(ingredient.toString());
         }
+        saveToFile();
         return ingredientMap.put(idCount++, ingredient);
     }
 
@@ -40,6 +53,7 @@ public class IngredientServiceImpl implements IngredientService {
         if (!validationService.validate(ingredient)) {
             throw new ValidationException(ingredient.toString());
         }
+        saveToFile();
         return ingredientMap.replace(id, ingredient);
     }
 
@@ -50,6 +64,26 @@ public class IngredientServiceImpl implements IngredientService {
     @Override
     public Map <Long, Ingredient> getAll(){
         return ingredientMap;
+    }
+
+    private void saveToFile(){
+        try {
+            String json = new ObjectMapper().writeValueAsString(ingredientMap);
+            filesService.saveToFile(json);
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+
+    private void readFromFile(){
+        try {
+            String json = filesService.readFromFile();
+            ingredientMap = new ObjectMapper().readValue(json, new TypeReference<TreeMap<Long, Ingredient>>() {
+            });
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException(e);
+        }
     }
 }
 

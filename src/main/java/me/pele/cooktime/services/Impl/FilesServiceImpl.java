@@ -4,6 +4,7 @@ import me.pele.cooktime.services.FilesService;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.PostConstruct;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -15,7 +16,12 @@ public class FilesServiceImpl implements FilesService {
     private String dataFilePath;
     @Value("${name.of.data.file}")
     private String dataFileName;
-    public Path path = Path.of(dataFilePath, dataFileName);
+    public Path path;
+
+    @PostConstruct
+    public void init(){
+        path = Path.of(dataFilePath, dataFileName);
+    }
 
     @Override
     public boolean saveToFile(String json){
@@ -38,7 +44,6 @@ public class FilesServiceImpl implements FilesService {
 
     private boolean cleanDataFile (){
         try {
-
             Files.deleteIfExists(path);
             Files.createFile(path);
             return true;

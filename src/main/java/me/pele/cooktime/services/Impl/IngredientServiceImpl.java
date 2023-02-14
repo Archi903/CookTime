@@ -14,7 +14,6 @@ import javax.annotation.PostConstruct;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
-import java.util.TreeMap;
 
 @Service
 public class IngredientServiceImpl implements IngredientService {
@@ -28,6 +27,7 @@ public class IngredientServiceImpl implements IngredientService {
         this.filesService = filesService;
         this.validationService = validationService;
     }
+
 
     @PostConstruct
     private void init(){
@@ -59,6 +59,7 @@ public class IngredientServiceImpl implements IngredientService {
 
     @Override
     public Ingredient deleteIngredient(Long id) {
+        saveToFile();
         return ingredientMap.remove(id);
     }
     @Override
@@ -71,7 +72,7 @@ public class IngredientServiceImpl implements IngredientService {
             String json = new ObjectMapper().writeValueAsString(ingredientMap);
             filesService.saveToFile(json);
         } catch (JsonProcessingException e) {
-            throw new RuntimeException(e);
+            e.printStackTrace();
         }
     }
 
@@ -79,10 +80,9 @@ public class IngredientServiceImpl implements IngredientService {
     private void readFromFile(){
         try {
             String json = filesService.readFromFile();
-            ingredientMap = new ObjectMapper().readValue(json, new TypeReference<TreeMap<Long, Ingredient>>() {
-            });
+            ingredientMap = new ObjectMapper().readValue(json, new TypeReference<>() {});
         } catch (JsonProcessingException e) {
-            throw new RuntimeException(e);
+            e.printStackTrace();
         }
     }
 }

@@ -15,7 +15,7 @@ public class FilesServiceImpl implements FilesService {
     private String dataFilePath;
     @Value("${name.of.data.file}")
     private String dataFileName;
-    private final Path path = Path.of(dataFilePath);
+    public Path path = Path.of(dataFilePath, dataFileName);
 
     @Override
     public boolean saveToFile(String json){

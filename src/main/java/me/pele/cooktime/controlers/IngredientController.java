@@ -41,6 +41,16 @@ public class IngredientController {
                                             array = @ArraySchema(schema = @Schema(implementation = Ingredient.class))
                                     )
                             }
+                    ),
+                    @ApiResponse(
+                            responseCode = "400",
+                            description = "Ошибка в запросе",
+                            content = {
+                                    @Content(
+                                            mediaType = "application/json",
+                                            array = @ArraySchema(schema = @Schema(implementation = Ingredient.class))
+                                    )
+                            }
                     )
             }
     )
@@ -64,7 +74,16 @@ public class IngredientController {
                                             array = @ArraySchema(schema = @Schema(implementation = Ingredient.class))
                                     )
                             }
-                    )
+                    ), @ApiResponse(
+                    responseCode = "404",
+                    description = "Ингредиент не найден",
+                    content = {
+                            @Content(
+                                    mediaType = "application/json",
+                                    array = @ArraySchema(schema = @Schema(implementation = Ingredient.class))
+                            )
+                    }
+            )
             }
     )
     @GetMapping("/{id}")
@@ -81,6 +100,16 @@ public class IngredientController {
                     @ApiResponse(
                             responseCode = "200",
                             description = "Ингредиент был изменен",
+                            content = {
+                                    @Content(
+                                            mediaType = "application/json",
+                                            array = @ArraySchema(schema = @Schema(implementation = Ingredient.class))
+                                    )
+                            }
+                    ),
+                    @ApiResponse(
+                            responseCode = "400",
+                            description = "Ошибка в запросе",
                             content = {
                                     @Content(
                                             mediaType = "application/json",

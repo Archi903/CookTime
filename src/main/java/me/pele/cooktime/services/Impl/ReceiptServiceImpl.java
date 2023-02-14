@@ -26,6 +26,7 @@ public class ReceiptServiceImpl implements ReceiptService {
         this.validationService = validationService;
     }
 
+
     @PostConstruct
     private void init(){
         readFromFile();
@@ -55,6 +56,7 @@ public class ReceiptServiceImpl implements ReceiptService {
 
     @Override
     public Receipt deleteReceipt(Long id){
+        saveToFile();
         return receiptMap.remove(id);
     }
     @Override
@@ -67,7 +69,7 @@ public class ReceiptServiceImpl implements ReceiptService {
             String json = new ObjectMapper().writeValueAsString(receiptMap);
             filesService.saveToFile(json);
         } catch (JsonProcessingException e) {
-            throw new RuntimeException(e);
+            e.printStackTrace();
         }
     }
 
@@ -75,10 +77,9 @@ public class ReceiptServiceImpl implements ReceiptService {
     private void readFromFile(){
         try {
             String json = filesService.readFromFile();
-            receiptMap = new ObjectMapper().readValue(json, new TypeReference<TreeMap<Long, Receipt>>() {
-            });
+            receiptMap = new ObjectMapper().readValue(json, new TypeReference<>() {});
         } catch (JsonProcessingException e) {
-            throw new RuntimeException(e);
+            e.printStackTrace();
         }
     }
 

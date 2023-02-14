@@ -8,6 +8,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import me.pele.cooktime.model.Ingredient;
+import me.pele.cooktime.model.Receipt;
 import me.pele.cooktime.services.IngredientService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -41,7 +42,17 @@ public class IngredientController {
                                             array = @ArraySchema(schema = @Schema(implementation = Ingredient.class))
                                     )
                             }
-                    )
+                    ),
+                    @ApiResponse(
+                    responseCode = "400",
+                    description = "Ошибка в запросе",
+                    content = {
+                            @Content(
+                                    mediaType = "application/json",
+                                    array = @ArraySchema(schema = @Schema(implementation = Ingredient.class))
+                            )
+                    }
+            )
             }
     )
     @PostMapping
@@ -56,16 +67,24 @@ public class IngredientController {
     @ApiResponses(
             value = {
                     @ApiResponse(
-                            responseCode = "200",
-                            description = "Ингредиент найден",
-                            content = {
-                                    @Content(
-                                            mediaType = "application/json",
-                                            array = @ArraySchema(schema = @Schema(implementation = Ingredient.class))
-                                    )
-                            }
-                    )
-            }
+                    responseCode = "200",
+                    description = "Ингредиент найден",
+                    content = {
+                            @Content(
+                                    mediaType = "application/json",
+                                    array = @ArraySchema(schema = @Schema(implementation = Ingredient.class))
+                            )
+                    }
+            ), @ApiResponse(
+                    responseCode = "404",
+                    description = "Ингредиент не найден",
+                    content = {
+                            @Content(
+                                    mediaType = "application/json",
+                                    array = @ArraySchema(schema = @Schema(implementation = Ingredient.class))
+                            )
+                    }
+            )}
     )
     @GetMapping("/{id}")
     public ResponseEntity<Ingredient> getById(@PathVariable Long id) {
@@ -81,6 +100,16 @@ public class IngredientController {
                     @ApiResponse(
                             responseCode = "200",
                             description = "Ингредиент был изменен",
+                            content = {
+                                    @Content(
+                                            mediaType = "application/json",
+                                            array = @ArraySchema(schema = @Schema(implementation = Ingredient.class))
+                                    )
+                            }
+                    ),
+                    @ApiResponse(
+                            responseCode = "400",
+                            description = "Ошибка в запросе",
                             content = {
                                     @Content(
                                             mediaType = "application/json",

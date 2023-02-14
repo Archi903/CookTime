@@ -41,6 +41,16 @@ public class ReceiptController {
                                             array = @ArraySchema(schema = @Schema(implementation = Receipt.class))
                                     )
                             }
+                    ),
+                    @ApiResponse(
+                            responseCode = "400",
+                            description = "Ошибка в запросе",
+                            content = {
+                                    @Content(
+                                            mediaType = "application/json",
+                                            array = @ArraySchema(schema = @Schema(implementation = Receipt.class))
+                                    )
+                            }
                     )
             }
     )
@@ -57,6 +67,16 @@ public class ReceiptController {
                     @ApiResponse(
                             responseCode = "200",
                             description = "Рецепт был найден",
+                            content = {
+                                    @Content(
+                                            mediaType = "application/json",
+                                            array = @ArraySchema(schema = @Schema(implementation = Receipt.class))
+                                    )
+                            }
+                    ),
+                    @ApiResponse(
+                            responseCode = "404",
+                            description = "Рецепт не найден",
                             content = {
                                     @Content(
                                             mediaType = "application/json",
@@ -86,7 +106,17 @@ public class ReceiptController {
                                             array = @ArraySchema(schema = @Schema(implementation = Receipt.class))
                                     )
                             }
-                    )
+                    ),
+                    @ApiResponse(
+                    responseCode = "400",
+                    description = "Ошибка в запросе",
+                    content = {
+                            @Content(
+                                    mediaType = "application/json",
+                                    array = @ArraySchema(schema = @Schema(implementation = Receipt.class))
+                            )
+                    }
+            )
             }
     )
     @PutMapping ("/{id}")

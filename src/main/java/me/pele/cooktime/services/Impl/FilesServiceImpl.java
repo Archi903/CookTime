@@ -43,7 +43,8 @@ public class FilesServiceImpl implements FilesService {
         }
     }
 
-    private boolean cleanDataFile (){
+    @Override
+    public boolean cleanDataFile (){
         try {
             Files.deleteIfExists(path);
             Files.createFile(path);
@@ -52,8 +53,8 @@ public class FilesServiceImpl implements FilesService {
             return false;
         }
     }
-//    @Override
-//    public File getDataFile() {
-//        return new File(dataFilePath + "/" + dataFileName);
-//    }
+    @Override
+    public File getDataFile() {
+        return new File(dataFilePath + "/" + dataFileName);
+    }
 }

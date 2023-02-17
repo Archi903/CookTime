@@ -7,7 +7,6 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import me.pele.cooktime.model.Ingredient;
 import me.pele.cooktime.model.Receipt;
 import me.pele.cooktime.services.ReceiptService;
 import org.springframework.http.ResponseEntity;

@@ -1,10 +1,10 @@
 package me.pele.cooktime.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
-@Data
+@Getter
+@Setter
+@EqualsAndHashCode
 @AllArgsConstructor
 @NoArgsConstructor
 public class Ingredient {
@@ -13,4 +13,10 @@ public class Ingredient {
     private Integer amountOfIngredients;
     private String typeOfMeasure;
 
+    @Override
+    public String toString() {
+        return "Название ингредиента - " + name + '\'' +
+                ", количество - " + amountOfIngredients +
+                ", единица измерения - " + typeOfMeasure;
+    }
 }

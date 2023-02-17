@@ -1,6 +1,9 @@
 package me.pele.cooktime.services;
 
 import java.io.File;
+import java.io.IOException;
+import java.nio.file.Path;
+
 
 public interface FilesService {
 
@@ -19,4 +22,6 @@ public interface FilesService {
     File getDataFileReceipt();
 
     File getDataFileIngredient();
+
+    Path saveToFile(String content, Path path) throws IOException;
 }

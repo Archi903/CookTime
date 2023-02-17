@@ -1,12 +1,12 @@
 package me.pele.cooktime.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.util.List;
 
-@Data
+@Getter
+@Setter
+@EqualsAndHashCode
 @AllArgsConstructor
 @NoArgsConstructor
 public class Receipt {
@@ -16,4 +16,11 @@ public class Receipt {
     private List<Ingredient> ingredient;
     private List<String> steps;
 
+    @Override
+    public String toString() {
+        return "Название рецепта - " + name + '\'' +
+                ", время приготовления - " + cookingTime+ '\'' +  ingredient + '\'' +
+                ", шаги - " + steps +
+                '}';
+    }
 }

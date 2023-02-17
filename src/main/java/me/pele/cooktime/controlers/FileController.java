@@ -1,6 +1,7 @@
 package me.pele.cooktime.controlers;
 
 import me.pele.cooktime.services.FilesService;
+import me.pele.cooktime.services.ReceiptService;
 import org.apache.commons.io.IOUtils;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.HttpHeaders;
@@ -16,9 +17,11 @@ import java.io.*;
 @RequestMapping("/files")
 public class FileController {
     private final FilesService filesService;
+    private final ReceiptService receiptService;
 
-    public FileController(FilesService filesService) {
+    public FileController(FilesService filesService, ReceiptService receiptService) {
         this.filesService = filesService;
+        this.receiptService = receiptService;
     }
 
 
@@ -29,9 +32,9 @@ public class FileController {
         if (file.exists()){
             InputStreamResource resource = new InputStreamResource(new FileInputStream(file));
             return ResponseEntity.ok()
-                    .contentType(MediaType.APPLICATION_JSON)
+                    .contentType(MediaType.TEXT_PLAIN)
                     .contentLength(file.length())
-                    .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"Receipt.json\"")
+                    .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"Receipt.txt\"")
                     .body(resource);
         } else {
             return ResponseEntity.noContent().build();
@@ -57,7 +60,7 @@ public class FileController {
         filesService.cleanDataFileReceipt();
         File dataFile = filesService.getDataFileReceipt();
 
-        try(FileOutputStream fos =  new FileOutputStream(dataFile);) {
+        try(FileOutputStream fos =  new FileOutputStream(dataFile)) {
             IOUtils.copy(file.getInputStream(), fos);
             return ResponseEntity.ok().build();
         } catch (IOException e) {
@@ -70,13 +73,28 @@ public class FileController {
         filesService.cleanDataFileIngredient();
         File dataFile = filesService.getDataFileIngredient();
 
-        try(FileOutputStream fos =  new FileOutputStream(dataFile);) {
+        try(FileOutputStream fos =  new FileOutputStream(dataFile)) {
             IOUtils.copy(file.getInputStream(), fos);
             return ResponseEntity.ok().build();
         } catch (IOException e) {
             e.printStackTrace();
         }
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+    }
+
+    @GetMapping("/export/receipt/txt")
+    public ResponseEntity<InputStreamResource> downloadDataFileReceiptTXT() throws IOException {
+        File file = receiptService.ReceiptText();
+        if (file.exists()){
+            InputStreamResource resource = new InputStreamResource(new FileInputStream(file));
+            return ResponseEntity.ok()
+                    .contentType(MediaType.TEXT_PLAIN)
+                    .contentLength(file.length())
+                    .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"Receipt.txt\"")
+                    .body(resource);
+        } else {
+            return ResponseEntity.noContent().build();
+        }
     }
 
 }

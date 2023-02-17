@@ -1,6 +1,8 @@
 package me.pele.cooktime.services;
 import me.pele.cooktime.model.Receipt;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.Map;
 import java.util.Optional;
 
@@ -16,4 +18,10 @@ public interface ReceiptService {
 
 
     Map <Long, Receipt> getAll();
+
+    File ReceiptComplete () throws IOException;
+
+    File ReceiptText() throws IOException;
+
+    String receiptToString();
 }

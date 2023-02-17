@@ -4,13 +4,18 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import me.pele.cooktime.exception.ValidationException;
+import me.pele.cooktime.model.Ingredient;
 import me.pele.cooktime.model.Receipt;
 import me.pele.cooktime.services.FilesService;
 import me.pele.cooktime.services.ReceiptService;
 import me.pele.cooktime.services.ValidationService;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Path;
 import java.util.*;
 
 @Service
@@ -20,6 +25,10 @@ public class ReceiptServiceImpl implements ReceiptService {
     private Map<Long, Receipt> receiptMap = new HashMap<>();
     private static long idCount = 1;
     private final ValidationService validationService;
+    @Value("${path.to.data.file}")
+    public String dataFilePath;
+    @Value("${name.of.recipe.txt.data.file}")
+    public String dataFileTxtReceipt;
 
     public ReceiptServiceImpl(FilesService filesService, ValidationService validationService) {
         this.filesService = filesService;
@@ -67,6 +76,11 @@ public class ReceiptServiceImpl implements ReceiptService {
         return receiptMap;
     }
 
+    @Override
+    public File ReceiptComplete() throws IOException {
+        return null;
+    }
+
     private void saveToFile(){
         try {
             String json = new ObjectMapper().writeValueAsString(receiptMap);
@@ -86,4 +100,27 @@ public class ReceiptServiceImpl implements ReceiptService {
         }
     }
 
+    @Override
+    public File ReceiptText() throws IOException {
+        return filesService.saveToFile(receiptToString(), Path.of(dataFilePath, dataFileTxtReceipt)).toFile();
+    }
+
+    @Override
+    public String receiptToString() {
+        StringBuilder sb = new StringBuilder();
+        String listEL = "•";
+        for (Receipt receipt : receiptMap.values()) {
+            sb.append(receipt.toString()).append("\n");
+
+            sb.append("\n Ингредиенты \n");
+            for (Ingredient ingredient : receipt.getIngredient()) {
+                sb.append(listEL).append(ingredient.toString()).append("\n");
+            }
+            sb.append("\n Шаги \n");
+            for (String step : receipt.getSteps()){
+                sb.append(listEL).append(step).append("\n");
+            }
+        }
+        return sb.append("\n").toString();
+    }
 }

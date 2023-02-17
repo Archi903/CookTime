@@ -39,8 +39,9 @@ public class IngredientServiceImpl implements IngredientService {
         if (!validationService.validate(ingredient)) {
             throw new ValidationException(ingredient.toString());
         }
+        ingredientMap.put(idCount++, ingredient);
         saveToFile();
-        return ingredientMap.put(idCount++, ingredient);
+        return ingredientMap.get(idCount);
     }
 
     @Override
@@ -53,14 +54,17 @@ public class IngredientServiceImpl implements IngredientService {
         if (!validationService.validate(ingredient)) {
             throw new ValidationException(ingredient.toString());
         }
+
+        ingredientMap.replace(id, ingredient);
         saveToFile();
-        return ingredientMap.replace(id, ingredient);
+        return ingredientMap.get(id);
     }
 
     @Override
     public Ingredient deleteIngredient(Long id) {
+        ingredientMap.remove(id);
         saveToFile();
-        return ingredientMap.remove(id);
+        return ingredientMap.get(id);
     }
     @Override
     public Map <Long, Ingredient> getAll(){
@@ -70,7 +74,7 @@ public class IngredientServiceImpl implements IngredientService {
     private void saveToFile(){
         try {
             String json = new ObjectMapper().writeValueAsString(ingredientMap);
-            filesService.saveToFile(json);
+            filesService.saveToFileIngredient(json);
         } catch (JsonProcessingException e) {
             e.printStackTrace();
         }
@@ -79,7 +83,7 @@ public class IngredientServiceImpl implements IngredientService {
 
     private void readFromFile(){
         try {
-            String json = filesService.readFromFile();
+            String json = filesService.readFromFileIngredient();
             ingredientMap = new ObjectMapper().readValue(json, new TypeReference<>() {});
         } catch (JsonProcessingException e) {
             e.printStackTrace();

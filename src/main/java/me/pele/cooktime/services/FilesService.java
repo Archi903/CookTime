@@ -4,11 +4,19 @@ import java.io.File;
 
 public interface FilesService {
 
-    boolean saveToFile(String json);
+    boolean saveToFileReceipt(String json);
 
-    String readFromFile();
+    boolean saveToFileIngredient(String json);
 
-    boolean cleanDataFile();
+    String readFromFileReceipt();
 
-    File getDataFile();
+    String readFromFileIngredient();
+
+    boolean cleanDataFileReceipt();
+
+    boolean cleanDataFileIngredient();
+
+    File getDataFileReceipt();
+
+    File getDataFileIngredient();
 }

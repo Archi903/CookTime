@@ -36,8 +36,9 @@ public class ReceiptServiceImpl implements ReceiptService {
         if (!validationService.validate(receipt)) {
             throw new ValidationException(receipt.toString());
         }
+        receiptMap.put(idCount++, receipt);
         saveToFile();
-        return receiptMap.put(idCount++, receipt);
+        return receiptMap.get(idCount);
     }
 
     @Override
@@ -50,14 +51,16 @@ public class ReceiptServiceImpl implements ReceiptService {
         if (!validationService.validate(receipt)) {
             throw new ValidationException(receipt.toString());
         }
+        receiptMap.replace(id, receipt);
         saveToFile();
-        return receiptMap.replace(id, receipt);
+        return receiptMap.get(id);
     }
 
     @Override
     public Receipt deleteReceipt(Long id){
+        receiptMap.remove(id);
         saveToFile();
-        return receiptMap.remove(id);
+        return receiptMap.get(id);
     }
     @Override
     public Map <Long, Receipt> getAll(){
@@ -67,7 +70,7 @@ public class ReceiptServiceImpl implements ReceiptService {
     private void saveToFile(){
         try {
             String json = new ObjectMapper().writeValueAsString(receiptMap);
-            filesService.saveToFile(json);
+            filesService.saveToFileReceipt(json);
         } catch (JsonProcessingException e) {
             e.printStackTrace();
         }
@@ -76,7 +79,7 @@ public class ReceiptServiceImpl implements ReceiptService {
 
     private void readFromFile(){
         try {
-            String json = filesService.readFromFile();
+            String json = filesService.readFromFileReceipt();
             receiptMap = new ObjectMapper().readValue(json, new TypeReference<>() {});
         } catch (JsonProcessingException e) {
             e.printStackTrace();
